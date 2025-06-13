@@ -1,0 +1,20 @@
+// src/components/Plane.jsx
+import { RigidBody } from "@react-three/rapier";
+import React from "react";
+
+const Plane = () => {
+  return (
+    <RigidBody type="fixed" colliders="hull">
+      <mesh
+        rotation-x={-Math.PI / 2}
+        position={[0, -0.5, 0]}
+        receiveShadow
+      >
+        <planeGeometry args={[50, 50]} />
+        <meshStandardMaterial color="#dddddd" />
+      </mesh>
+    </RigidBody>
+  );
+};
+
+export default Plane;
