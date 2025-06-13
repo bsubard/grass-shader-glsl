@@ -11,7 +11,7 @@ function App() {
       <GizmoHelper>
         <GizmoViewport />
       </GizmoHelper>
-      <axesHelper args={[5]} />
+      {/* <axesHelper args={[5]} /> */}
 
       <Experience/>
     </Canvas>
