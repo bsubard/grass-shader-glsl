@@ -5,6 +5,7 @@ import {
   KeyboardControls,
 } from "@react-three/drei";
 import { Experience } from "./components/Experience";
+import { Perf } from "r3f-perf";
 
 // Define keyboard control mappings
 const keyboardMap = [
@@ -24,6 +25,7 @@ function App() {
           <GizmoViewport />
         </GizmoHelper>
         {/* <axesHelper args={[5]} /> */}
+        <Perf position="top-left" />
 
         <Experience />
       </Canvas>

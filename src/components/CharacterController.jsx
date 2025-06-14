@@ -20,12 +20,17 @@ const CharacterController = () => {
   const velocity = new Vector3();
 
   const WALK_SPEED = 2;
-  const RUN_SPEED = 5;
+  const RUN_SPEED = 6;
+
+  const lerpAngle = (a, b, t) => {
+    const delta =
+      ((((b - a) % (2 * Math.PI)) + 3 * Math.PI) % (2 * Math.PI)) - Math.PI;
+    return a + delta * t;
+  };
 
   useFrame(({ camera }) => {
     const keys = getKeys();
-    const isMoving =
-      keys.forward || keys.backward || keys.left || keys.right;
+    const isMoving = keys.forward || keys.backward || keys.left || keys.right;
     const speed = keys.run ? RUN_SPEED : WALK_SPEED;
 
     forward.set(0, 0, Number(keys.forward) - Number(keys.backward));
@@ -42,7 +47,7 @@ const CharacterController = () => {
     if (isMoving && characterRef.current) {
       const targetAngle = Math.atan2(direction.x, direction.z);
       const currentY = characterRef.current.rotation.y;
-      characterRef.current.rotation.y += (targetAngle - currentY) * 0.1;
+      characterRef.current.rotation.y = lerpAngle(currentY, targetAngle, 0.1);
     }
 
     // Switch animations
@@ -71,7 +76,7 @@ const CharacterController = () => {
           <Character scale={1} position-y={-0.25} animation={animation} />
         </group>
       </group>
-      <CapsuleCollider args={[0.54, 0.2]} position={[0, 0.5, 0]}/>
+      <CapsuleCollider args={[0.54, 0.2]} position={[0, 0.5, 0]} />
     </RigidBody>
   );
 };
