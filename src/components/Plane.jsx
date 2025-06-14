@@ -7,7 +7,7 @@ const Plane = () => {
     <RigidBody type="fixed" colliders="hull">
       <mesh
         rotation-x={-Math.PI / 2}
-        position={[0, -0.5, 0]}
+        position={[0, 0, 0]}
         receiveShadow
       >
         <planeGeometry args={[50, 50]} />

@@ -9,7 +9,7 @@ import { useRef } from "react";
 import { Physics } from "@react-three/rapier";
 import CharacterController from "./CharacterController";
 import Plane from "./Plane";
-import { GrassBlade } from "./Grass";
+import {  InstancedGrass } from "./Grass";
 
 export const Experience = () => {
   const shadowCameraRef = useRef();
@@ -50,7 +50,8 @@ export const Experience = () => {
         <CharacterController />
 
       </Physics>
-      <GrassBlade/>
+
+      <InstancedGrass/>
 
     </>
   );
