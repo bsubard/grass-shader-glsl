@@ -25,9 +25,9 @@ export const Experience = () => {
         azimuth={0.25}
       />
 
-      {/* <directionalLight
+      <directionalLight
         ref={dirLightRef}
-        intensity={10.65}
+        intensity={0.65}
         castShadow
         position={[-15, 10, 15]}
         shadow-mapSize-width={2048}
@@ -42,7 +42,7 @@ export const Experience = () => {
           ref={shadowCameraRef}
           attach={"shadow-camera"}
         />
-      </directionalLight> */}
+      </directionalLight>
 
       <Physics debug >
 

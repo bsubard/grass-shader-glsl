@@ -27,7 +27,7 @@ function App() {
         </GizmoHelper>
         {/* <axesHelper args={[5]} /> */}
         <Perf position="top-left" />
-        <OrbitControls/>
+        {/* <OrbitControls/> */}
 
         <Experience />
       </Canvas>

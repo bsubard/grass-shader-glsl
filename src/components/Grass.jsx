@@ -12,7 +12,7 @@ export const InstancedGrass = () => {
   const COUNT = 4000;
   const GRASSWIDTH = 10;
   const GRASSLENGTH = 10;
-    const halfWidth = 0.07;
+    const halfWidth = 0.06;
 
   // Grass blade geometry
   const geometry = useMemo(() => {
