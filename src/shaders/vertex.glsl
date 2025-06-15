@@ -1,36 +1,36 @@
-// uniform mat4 projectionMatrix; // camera projection into clip space (perspective, orthographic, etc.)
-// uniform mat4 viewMatrix;    // camera transformations (viewing angle, position, etc.)
-// uniform mat4 modelMatrix; //transformations relative to the mesh (rotation, position, scale)
-
 uniform float uTime;
 uniform float uSpeed;
+uniform float uHalfWidth;
 
+varying vec3 vNormal1;
+varying vec3 vNormal2;
 varying float vElevation;
+varying float vSideGradient;
 
 void main() {
-    // Local position of the vertex
     vec3 localPosition = position;
 
-    // Extract local X-axis from instance matrix (direction to bend)
-    vec3 instanceX = normalize(vec3(instanceMatrix[0].x, instanceMatrix[0].y, instanceMatrix[0].z));
+    // Get direction to bend from instanceMatrix (Z axis)
+    vec3 instanceX = normalize(vec3(0.0, 0.0, instanceMatrix[0].z));
+    float bendStrength = 0.3;
+    float topBendFactor = smoothstep(0.2, 1.0, position.y);
 
-
-    // Bend strength (constant or time-animated)
-    float bendStrength = 0.2;
-
-    // Smooth interpolation from 0 (bottom) to 1 (top)
-    float topBendFactor = smoothstep(0.0, 1.0, position.y);
-
-    // Final displacement
+    // Bend geometry
     localPosition += instanceX * bendStrength * topBendFactor;
 
     // Apply instance transform
-    vec4 modelPosition = instanceMatrix * vec4(localPosition, 1.0);
+    vec4 worldPosition = instanceMatrix * vec4(localPosition, 1.0);
 
-    // Project to clip space
-    vec4 viewPosition = viewMatrix * modelPosition;
+    // Project to screen
+    vec4 viewPosition = viewMatrix * worldPosition;
     gl_Position = projectionMatrix * viewPosition;
 
-    // Pass elevation for coloring
+    // ⚠️ Transform normal manually using instanceMatrix
+    vec3 transformedNormal = normalize(mat3(instanceMatrix) * normal);
+    vNormal1 = normalize(normalMatrix * normal); // Apply view rotation
+    vNormal2 = normalize(normalMatrix * normal*-1.0); // Apply view rotation
+
+    // Pass to fragment
     vElevation = position.y;
+    vSideGradient = 1.0 - ((position.x + uHalfWidth) / (2.0 * uHalfWidth));
 }

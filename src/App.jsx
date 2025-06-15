@@ -3,6 +3,7 @@ import {
   GizmoHelper,
   GizmoViewport,
   KeyboardControls,
+  OrbitControls,
 } from "@react-three/drei";
 import { Experience } from "./components/Experience";
 import { Perf } from "r3f-perf";
@@ -26,6 +27,7 @@ function App() {
         </GizmoHelper>
         {/* <axesHelper args={[5]} /> */}
         <Perf position="top-left" />
+        <OrbitControls/>
 
         <Experience />
       </Canvas>

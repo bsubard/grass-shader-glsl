@@ -13,10 +13,11 @@ import {  InstancedGrass } from "./Grass";
 
 export const Experience = () => {
   const shadowCameraRef = useRef();
+  const dirLightRef = useRef();
 
   return (
     <>
-      <Environment preset="sunset" />
+      {/* <Environment preset="sunset" /> */}
       <Sky
         distance={450000}
         sunPosition={[100, 50, 100]}
@@ -24,8 +25,9 @@ export const Experience = () => {
         azimuth={0.25}
       />
 
-      <directionalLight
-        intensity={0.65}
+      {/* <directionalLight
+        ref={dirLightRef}
+        intensity={10.65}
         castShadow
         position={[-15, 10, 15]}
         shadow-mapSize-width={2048}
@@ -40,7 +42,7 @@ export const Experience = () => {
           ref={shadowCameraRef}
           attach={"shadow-camera"}
         />
-      </directionalLight>
+      </directionalLight> */}
 
       <Physics debug >
 
@@ -51,7 +53,7 @@ export const Experience = () => {
 
       </Physics>
 
-      <InstancedGrass/>
+      <InstancedGrass dirLightRef={dirLightRef}/>
 
     </>
   );

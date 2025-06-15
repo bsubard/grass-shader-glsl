@@ -1,20 +1,30 @@
 import { useMemo, useRef, useEffect } from "react";
 import * as THREE from "three";
 import { useFrame, useThree } from "@react-three/fiber";
+import { useControls } from "leva";
 import grassVertexShader from "../shaders/vertex.glsl";
 import grassFragmentShader from "../shaders/fragment.glsl";
 
 export const InstancedGrass = () => {
+
   const instanceRef = useRef();
   const { clock } = useThree();
-  const COUNT = 6000;
+  const COUNT = 1000;
   const GRASSWIDTH = 10;
   const GRASSLENGTH = 10;
+    const halfWidth = 0.1;
 
+    // Define leva controls
+  const { tipColor, baseColor } = useControls("Grass", {
+    tipColor: '#d5de63',
+    baseColor: '#949f24',
+
+  });
+  // Grass blade geometry
   const geometry = useMemo(() => {
     const segments = 7;
     const height = 1;
-    const halfWidth = 0.05;
+
     const taper = 0.005;
     const positions = [];
 
@@ -41,9 +51,12 @@ export const InstancedGrass = () => {
 
     const geo = new THREE.BufferGeometry();
     geo.setAttribute("position", new THREE.BufferAttribute(new Float32Array(positions), 3));
+    // create normals
+    geo.computeVertexNormals();
     return geo;
   }, []);
 
+  // Grass blade material
   const material = useMemo(() => {
     return new THREE.ShaderMaterial({
       vertexShader: grassVertexShader,
@@ -54,6 +67,7 @@ export const InstancedGrass = () => {
         uSpeed: { value: 3 },
         uTipColor: { value: new THREE.Color('#d5de63') },
         uBaseColor: { value: new THREE.Color('#949f24') },
+        uHalfWidth: { value: halfWidth },
       },
       side: THREE.DoubleSide,
 
@@ -62,8 +76,11 @@ export const InstancedGrass = () => {
 
   // Animate uTime
   useFrame(() => {
-    material.uniforms.uTime.value = clock.getElapsedTime();
-  });
+  material.uniforms.uTime.value = clock.getElapsedTime();
+  material.uniforms.uTipColor.value = new THREE.Color(tipColor);
+  material.uniforms.uBaseColor.value = new THREE.Color(baseColor);
+});
+
 
   // 🌱 Setup the 10x10 grass blades after the instancedMesh is mounted
   useEffect(() => {

@@ -68,8 +68,8 @@ const CharacterController = () => {
     <RigidBody colliders={false} lockRotations ref={rb}>
       <group>
         {/* Camera follow points */}
-        <group ref={cameraTarget} position={[0, 1.2, 0]} />
-        <group ref={cameraPivot} position={[0, 2.5, -4]} />
+        {/* <group ref={cameraTarget} position={[0, 1.2, 0]} />
+        <group ref={cameraPivot} position={[0, 2.5, -4]} /> */}
 
         {/* Character */}
         <group ref={characterRef}>
