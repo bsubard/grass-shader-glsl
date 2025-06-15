@@ -17,7 +17,7 @@ export const Experience = () => {
 
   return (
     <>
-      {/* <Environment preset="sunset" /> */}
+      <Environment preset="sunset" />
       <Sky
         distance={450000}
         sunPosition={[100, 50, 100]}

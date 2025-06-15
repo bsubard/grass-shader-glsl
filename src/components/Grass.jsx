@@ -1,7 +1,7 @@
 import { useMemo, useRef, useEffect } from "react";
 import * as THREE from "three";
 import { useFrame, useThree } from "@react-three/fiber";
-import { useControls } from "leva";
+
 import grassVertexShader from "../shaders/vertex.glsl";
 import grassFragmentShader from "../shaders/fragment.glsl";
 
@@ -9,17 +9,11 @@ export const InstancedGrass = () => {
 
   const instanceRef = useRef();
   const { clock } = useThree();
-  const COUNT = 1000;
+  const COUNT = 4000;
   const GRASSWIDTH = 10;
   const GRASSLENGTH = 10;
-    const halfWidth = 0.1;
+    const halfWidth = 0.07;
 
-    // Define leva controls
-  const { tipColor, baseColor } = useControls("Grass", {
-    tipColor: '#d5de63',
-    baseColor: '#949f24',
-
-  });
   // Grass blade geometry
   const geometry = useMemo(() => {
     const segments = 7;
@@ -33,16 +27,17 @@ export const InstancedGrass = () => {
       const y1 = ((i + 1) / segments) * height;
 
       positions.push(
-        -halfWidth + taper * i, y0, 0,
-        halfWidth - taper * i, y0, 0,
-        -halfWidth + taper * (i + 1), y1, 0,
+        -halfWidth + taper * i, y0, 0,  // bottom left
+        halfWidth - taper * i, y0, 0, // bottom right
+        -halfWidth + taper * (i + 1), y1, 0, // top left
 
-        -halfWidth + taper * (i + 1), y1, 0,
-        halfWidth - taper * i, y0, 0,
-        halfWidth - taper * (i + 1), y1, 0
+        -halfWidth + taper * (i + 1), y1, 0, // top left
+        halfWidth - taper * i, y0, 0, // bottom right
+        halfWidth - taper * (i + 1), y1, 0 // top right
       );
     }
 
+    // top traingle
     positions.push(
       -halfWidth + taper * (segments - 1), ((segments - 1) / segments) * height, 0,
       halfWidth - taper * (segments - 1), ((segments - 1) / segments) * height, 0,
@@ -65,20 +60,18 @@ export const InstancedGrass = () => {
         uFrequency: { value: new THREE.Vector2(5, 5) },
         uTime: { value: 0 },
         uSpeed: { value: 3 },
-        uTipColor: { value: new THREE.Color('#d5de63') },
-        uBaseColor: { value: new THREE.Color('#949f24') },
+        uTipColor: { value: new THREE.Color('#f9ffa2') },
+        uBaseColor: { value: new THREE.Color('#acb932') },
         uHalfWidth: { value: halfWidth },
       },
       side: THREE.DoubleSide,
-
     });
   }, []);
 
   // Animate uTime
   useFrame(() => {
   material.uniforms.uTime.value = clock.getElapsedTime();
-  material.uniforms.uTipColor.value = new THREE.Color(tipColor);
-  material.uniforms.uBaseColor.value = new THREE.Color(baseColor);
+
 });
 
 
@@ -103,6 +96,11 @@ export const InstancedGrass = () => {
 
   instanceRef.current.instanceMatrix.needsUpdate = true;
 }, []);
+
+const sphereGeometry = new THREE.SphereGeometry(1, 32, 32);
+const planeGeometry = new THREE.PlaneGeometry(1, 1);
+const cubeGeometry = new THREE.BoxGeometry(1, 1, 1);
+
 
 
   return (
