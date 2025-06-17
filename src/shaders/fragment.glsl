@@ -6,13 +6,25 @@ varying float vElevation;
 varying float vSideGradient;
 varying vec3 vNormal;
 varying vec3 vFakeNormal;
+varying vec3 vPosition;
 
-vec3 directionalLight(vec3 lightColor, float lightIntensity, vec3 normal, vec3 lightPosition){
+vec3 directionalLight(vec3 lightColor,float lightIntensity,vec3 normal,vec3 lightPosition,vec3 viewDirection, float specularPower){
+
     vec3 lightDirection = normalize(lightPosition);
+    vec3 lightReflection = reflect(-lightDirection, normal);
 
     //Shading
     float shading = dot(normal, lightDirection);
-    return vec3(shading);
+    shading = max(0.0,shading);
+
+    //Specular
+    float specular = - dot(lightReflection,viewDirection);
+    specular = max(0.0,specular);
+    specular = pow(specular,specularPower) * shading;
+
+
+    return lightColor * lightIntensity * (shading + specular);
+    // return vec3(specular);
 }
 vec3 ambientLight(vec3 lightColor, float lightIntensity)
 {
@@ -25,13 +37,26 @@ void main()
 {
 
 
-    float gradient = smoothstep(0.5, 1.0, vElevation);
+    float gradient = smoothstep(0.2, 1.0, vElevation);
     float sideGradient = smoothstep(0.2, 1.0, vSideGradient);
     vec3 finalColor = mix(uBaseColor, uTipColor, gradient);
 
     vec3 light = vec3(0.0);
-    light += ambientLight(vec3(1.0), 0.4);
-    light += directionalLight(vec3(0.1,0.1,0.0), 1.6, vFakeNormal, vec3(1.0)) * 0.5;
+    vec3 normal = gl_FrontFacing ? vFakeNormal : -vFakeNormal;
+    // normal = normal * 0.5 + 0.5;
+
+    vec3 viewDirection = normalize(cameraPosition - vPosition);
+
+
+    light += ambientLight(vec3(1.0,1.0,1.0), 0.5);
+    light += directionalLight(
+        vec3(1.0,1.0,1.0), //light color
+        1.0,    //intensity
+        normal, //normal
+        vec3(2.0,2.0,2.0), //lightposition
+        viewDirection, //viewdirection
+        100.0 //specularpower
+        );
 
     finalColor *= light;
 

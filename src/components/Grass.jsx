@@ -1,23 +1,26 @@
 import { useMemo, useRef, useEffect } from "react";
 import * as THREE from "three";
 import { useFrame, useThree } from "@react-three/fiber";
-
 import grassVertexShader from "../shaders/vertex.glsl";
 import grassFragmentShader from "../shaders/fragment.glsl";
+import { useControls } from "leva";
 
 export const InstancedGrass = () => {
 
   const instanceRef = useRef();
   const { clock } = useThree();
-  const COUNT = 4000;
-  const GRASSWIDTH = 10;
-  const GRASSLENGTH = 10;
-    const halfWidth = 0.06;
+  const COUNT = 200000;
+  const GRASSWIDTH = 60;
+  const GRASSLENGTH = 60;
+  const halfWidth = 0.06;
+  const height = 1;
+
+  const { tipColor, baseColor } = useControls({ tipColor: '#d9c88b', baseColor: '#404709' })
 
   // Grass blade geometry
   const geometry = useMemo(() => {
     const segments = 7;
-    const height = 1;
+
 
     const taper = 0.005;
     const positions = [];
@@ -60,9 +63,10 @@ export const InstancedGrass = () => {
         uFrequency: { value: new THREE.Vector2(5, 5) },
         uTime: { value: 0 },
         uSpeed: { value: 3 },
-        uTipColor: { value: new THREE.Color('#f9ffa2') },
-        uBaseColor: { value: new THREE.Color('#acb932') },
+        uTipColor: { value: new THREE.Color(tipColor) },
+        uBaseColor: { value: new THREE.Color(baseColor) },
         uHalfWidth: { value: halfWidth },
+        uBladeHeight: { value: height },
       },
       side: THREE.DoubleSide,
     });
@@ -73,6 +77,13 @@ export const InstancedGrass = () => {
   material.uniforms.uTime.value = clock.getElapsedTime();
 
 });
+
+useEffect(() => {
+  if (material) {
+    material.uniforms.uTipColor.value.set(tipColor);
+    material.uniforms.uBaseColor.value.set(baseColor);
+  }
+}, [tipColor, baseColor, material]);
 
 
   // 🌱 Setup the 10x10 grass blades after the instancedMesh is mounted
