@@ -32,7 +32,7 @@ The geometry is manually generated using triangles (2 per rectangular segment), 
 
 <img width="1280" alt="Screenshot 2025-06-17 at 10 29 57 PM" src="https://github.com/user-attachments/assets/e8f2ef93-d4a2-4461-9ede-4179e54c35ca" />
 
-```js
+```jsx
 // Grass blade geometry
   const grassGeometry = useMemo(() => {
     const segments = 7;
@@ -108,46 +108,46 @@ const dummy = new THREE.Object3D();
 
 ### Features:
 - **Blade bending**: The shader bends each grass blade in its `local Z-direction` (typically forward in the mesh model), and applies a varying curvature starting at a certain height using a `bezier interpolation` for smoother, more natural bending.
-    ```js
-    // Bend direction in local space
-    vec3 instanceZ = normalize(vec3(0.0, 0.0, instanceMatrix[0].z));
+  ```glsl
+  // Bend direction in local space
+  vec3 instanceZ = normalize(vec3(0.0, 0.0, instanceMatrix[0].z));
 
-    float hash = rand(vec2(instanceMatrix[3].x, instanceMatrix[3].z));
+  float hash = rand(vec2(instanceMatrix[3].x, instanceMatrix[3].z));
 
-    float bendStrength = mix(0.3, 0.6, hash);
-    float bendStart = 0.2;
-    float t = clamp((pos.y / 2.0 - bendStart) / (1.0 - bendStart), 0.0, 1.0);
-    float topBendFactor = bezier(t, 0.1);
-    ```
+  float bendStrength = mix(0.3, 0.6, hash);
+  float bendStart = 0.2;
+  float t = clamp((pos.y / 2.0 - bendStart) / (1.0 - bendStart), 0.0, 1.0);
+  float topBendFactor = bezier(t, 0.1);
+  ```
 - **Gentle Wind**: Waving effect where each blade sways in the `xz` plane using sin() function.
 
 
 https://github.com/user-attachments/assets/afabcda2-b187-489e-b0cf-03c7d105d9c7
 
 
-    ```glsl
-    float gentleSway = sin(uTime * uSpeed * 0.8 + hash * 10.0) * 0.1;
-    vec3 gentleDir = normalize(vec3(1.0, 0.0, 1.0));
-    vec3 gentleOffset = gentleDir * gentleSway * t;
-    ```
+  ```glsl
+  float gentleSway = sin(uTime * uSpeed * 0.8 + hash * 10.0) * 0.1;
+  vec3 gentleDir = normalize(vec3(1.0, 0.0, 1.0));
+  vec3 gentleOffset = gentleDir * gentleSway * t;
+  ```
 - **StrongWind**: Strong waves generated using classic perlin noise `cnoise()`.
 
- 
+
 
 https://github.com/user-attachments/assets/f1dd00c9-42fb-4ba6-9000-8b28bc32f862
 
-   
+
 
 https://github.com/user-attachments/assets/558ce143-09f4-4aa7-b508-8e17b91aff09
 
-    ```glsl
-    vec3 worldPos = (instanceMatrix * vec4(pos, 1.0)).xyz;
-    float wave = cnoise(worldPos.xz * 0.3 + vec2(uTime * uSpeed * 0.2, 0.0));
-    float strongWind = wave * 0.65;
-    vec3 strongDir = normalize(vec3(0.0, 0.0, 1.0));
-    float y = pos.y;
-    vec3 strongOffset = strongDir * strongWind * pow(y, 2.0);
-    ```
+  ```glsl
+  vec3 worldPos = (instanceMatrix * vec4(pos, 1.0)).xyz;
+  float wave = cnoise(worldPos.xz * 0.3 + vec2(uTime * uSpeed * 0.2, 0.0));
+  float strongWind = wave * 0.65;
+  vec3 strongDir = normalize(vec3(0.0, 0.0, 1.0));
+  float y = pos.y;
+  vec3 strongOffset = strongDir * strongWind * pow(y, 2.0);
+  ```
 - **BillBoarding**: Blades try to rotate towards the camera, creating a more lusher scene without any unnecessary instancing of the blades.
 
 ```glsl
@@ -197,7 +197,7 @@ Varyings (to be used by Fragment shader):
 ### Features:
 - **Vertical gradient coloring**: Mixes `uBaseColor` and `uTipColor` based on `vElevation` using `smoothstep` for a soft gradient.
   <img width="1280" alt="Screenshot 2025-06-17 at 11 05 32 PM" src="https://github.com/user-attachments/assets/a7b9c6d0-85b2-454d-b591-600f265d222a" />
-  
+
   ```glsl
   float gradient = smoothstep(0.2, 1.0, vElevation);
   vec3 finalColor = mix(uBaseColor, uTipColor, gradient);
@@ -210,25 +210,25 @@ Varyings (to be used by Fragment shader):
 https://github.com/user-attachments/assets/282af595-aca9-4ced-b9e3-d21bd2d976ff
 
 
-    ```glsl
-    vec3 directionalLight(vec3 lightColor,float lightIntensity,vec3 normal,vec3 lightPosition,vec3 viewDirection, float specularPower){
+  ```glsl
+  vec3 directionalLight(vec3 lightColor,float lightIntensity,vec3 normal,vec3 lightPosition,vec3 viewDirection, float specularPower){
 
-    vec3 lightDirection = normalize(lightPosition);
-    vec3 lightReflection = reflect(-lightDirection, normal);
+  vec3 lightDirection = normalize(lightPosition);
+  vec3 lightReflection = reflect(-lightDirection, normal);
 
-    //Shading
-    float shading = dot(normal, lightDirection);
-    shading = max(0.0,shading);
+  //Shading
+  float shading = dot(normal, lightDirection);
+  shading = max(0.0,shading);
 
-    //Specular
-    float specular = - dot(lightReflection,viewDirection);
-    specular = max(0.0,specular);
-    specular = pow(specular,specularPower) * shading;
+  //Specular
+  float specular = - dot(lightReflection,viewDirection);
+  specular = max(0.0,specular);
+  specular = pow(specular,specularPower) * shading;
 
 
-    return lightColor * lightIntensity * (shading + specular);
-    }
-    ```
+  return lightColor * lightIntensity * (shading + specular);
+  }
+  ```
 
 Key uniforms:
 - `uBaseColor`: color near the root of the blade
