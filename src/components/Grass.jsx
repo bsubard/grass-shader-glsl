@@ -18,7 +18,7 @@ export const InstancedGrass = () => {
   const { tipColor, baseColor } = useControls({ tipColor: '#d9c88b', baseColor: '#404709' })
 
   // Grass blade geometry
-  const geometry = useMemo(() => {
+  const grassGeometry = useMemo(() => {
     const segments = 7;
 
 
@@ -117,7 +117,7 @@ const cubeGeometry = new THREE.BoxGeometry(1, 1, 1);
   return (
     <instancedMesh
       ref={instanceRef}
-      args={[geometry, material, COUNT]}
+      args={[grassGeometry, material, COUNT]}
       castShadow
       receiveShadow
     />
