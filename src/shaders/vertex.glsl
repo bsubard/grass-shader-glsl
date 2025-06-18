@@ -101,7 +101,7 @@ vec3 deform(vec3 pos) {
     // Strong wind
     vec3 worldPos = (instanceMatrix * vec4(pos, 1.0)).xyz;
     // float wave = sin(dot(worldPos.xz, vec2(0.7, 0.7)) * 0.5 + uTime * uSpeed * 0.5);
-    float wave = cnoise(worldPos.xz * 0.3 + vec2(uTime * uSpeed * 0.2, 0.0));
+    float wave = cnoise(worldPos.xz * 0.2 + vec2(uTime * uSpeed * 0.2, 0.0));
 
     float strongWind = wave * 0.65;
     vec3 strongDir = normalize(vec3(0.0, 0.0, 1.0));
