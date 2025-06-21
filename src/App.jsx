@@ -20,7 +20,7 @@ const keyboardMap = [
 function App() {
   return (
     <KeyboardControls map={keyboardMap}>
-      <Canvas shadows camera={{ position: [10, 3.5, 0], fov: 60 }}>
+      <Canvas shadows camera={{ position: [5, 1.5, 0], fov: 60 }}>
         {/* Debug Gizmo and Axes */}
         <GizmoHelper alignment="bottom-right" margin={[100, 100]}>
           <GizmoViewport />

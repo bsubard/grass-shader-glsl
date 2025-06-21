@@ -13,7 +13,6 @@ import {  InstancedGrass } from "./Grass";
 
 export const Experience = () => {
   const shadowCameraRef = useRef();
-  const dirLightRef = useRef();
 
   return (
     <>
@@ -26,7 +25,6 @@ export const Experience = () => {
       />
 
       <directionalLight
-        ref={dirLightRef}
         intensity={0.65}
         castShadow
         position={[-15, 10, 15]}
@@ -51,9 +49,15 @@ export const Experience = () => {
 
         <CharacterController />
 
+        {/* <mesh position={[0, 0.5, 0]} >
+          <boxGeometry args={[1, 1, 1]} />
+          <meshNormalMaterial side={2} wireframe/>
+
+        </mesh> */}
+
       </Physics>
 
-      <InstancedGrass dirLightRef={dirLightRef}/>
+      <InstancedGrass/>
 
     </>
   );

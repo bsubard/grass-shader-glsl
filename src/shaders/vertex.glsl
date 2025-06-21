@@ -112,6 +112,7 @@ vec3 deform(vec3 pos) {
     localPosition += instanceZ * bendStrength * topBendFactor;
     localPosition += gentleOffset;
     localPosition += strongOffset;
+    localPosition.y -= 0.1 * strongOffset.z;
 
     // Billboard
     vec3 camPos = inverse(viewMatrix)[3].xyz;

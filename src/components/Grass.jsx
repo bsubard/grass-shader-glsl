@@ -91,19 +91,14 @@ useEffect(() => {
   if (!instanceRef.current) return;
 
   const dummy = new THREE.Object3D();
-  let index = 0;
-
   for (let i = 0; i < COUNT; i++) {
-    // Randomly position within -5 to +5 in x and z (centered around origin)
-    const x = (2 * Math.random() - 1) * GRASSLENGTH/2;
-    const z = (2 * Math.random() - 1) * GRASSWIDTH/2;
-    dummy.position.set(x, 0, z);
-
-    dummy.rotation.y = Math.random() * Math.PI * 2;
-    dummy.updateMatrix();
-
-    instanceRef.current.setMatrixAt(index++, dummy.matrix);
-  }
+  const x = (Math.random() - 0.5) * GRASSLENGTH;
+  const z = (Math.random() - 0.5) * GRASSWIDTH;
+  dummy.position.set(x, 0, z);
+  dummy.rotation.y = Math.random() * Math.PI * 2;
+  dummy.updateMatrix();
+  instanceRef.current.setMatrixAt(i, dummy.matrix);
+}
 
   instanceRef.current.instanceMatrix.needsUpdate = true;
 }, []);
@@ -118,8 +113,6 @@ const cubeGeometry = new THREE.BoxGeometry(1, 1, 1);
     <instancedMesh
       ref={instanceRef}
       args={[grassGeometry, material, COUNT]}
-      castShadow
-      receiveShadow
     />
   );
 };
