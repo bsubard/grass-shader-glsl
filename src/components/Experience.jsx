@@ -10,6 +10,7 @@ import { Physics } from "@react-three/rapier";
 import CharacterController from "./CharacterController";
 import Plane from "./Plane";
 import {  InstancedGrass } from "./Grass";
+import { Fog } from "three";
 
 export const Experience = () => {
   const shadowCameraRef = useRef();
@@ -49,14 +50,13 @@ export const Experience = () => {
 
         <CharacterController />
 
-        {/* <mesh position={[0, 0.5, 0]} >
-          <boxGeometry args={[1, 1, 1]} />
-          <meshNormalMaterial side={2} wireframe/>
-
-        </mesh> */}
+        <fogExp2 attach="fog" color="#cad4db" density={0.1} />
 
       </Physics>
-
+      <mesh>
+        <boxGeometry args={[100, 100, 100]} />
+        <meshStandardMaterial color="#78623b" side={2}/>
+      </mesh>
       <InstancedGrass/>
 
     </>

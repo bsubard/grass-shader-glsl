@@ -15,7 +15,7 @@ export const InstancedGrass = () => {
   const halfWidth = 0.06;
   const height = 1;
 
-  const { tipColor, baseColor } = useControls({ tipColor: '#d9c88b', baseColor: '#404709' })
+  const { tipColor, baseColor, fogColor } = useControls({ tipColor: '#c8be9c', baseColor: '#404709', fogColor: '#e6ebef' });
 
   // Grass blade geometry
   const grassGeometry = useMemo(() => {
@@ -65,6 +65,7 @@ export const InstancedGrass = () => {
         uSpeed: { value: 3 },
         uTipColor: { value: new THREE.Color(tipColor) },
         uBaseColor: { value: new THREE.Color(baseColor) },
+        uFogColor: { value: new THREE.Color(fogColor) },
         uHalfWidth: { value: halfWidth },
         uBladeHeight: { value: height },
       },
@@ -82,8 +83,9 @@ useEffect(() => {
   if (material) {
     material.uniforms.uTipColor.value.set(tipColor);
     material.uniforms.uBaseColor.value.set(baseColor);
+    material.uniforms.uFogColor.value.set(fogColor);
   }
-}, [tipColor, baseColor, material]);
+}, [tipColor, baseColor, fogColor, material]);
 
 
   // 🌱 Setup the 10x10 grass blades after the instancedMesh is mounted

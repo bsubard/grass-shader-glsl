@@ -1,6 +1,7 @@
 uniform float uTime;
 uniform vec3 uBaseColor;
 uniform vec3 uTipColor;
+uniform vec3 uFogColor;
 
 varying float vElevation;
 varying float vSideGradient;
@@ -58,7 +59,11 @@ void main()
         100.0 //specularpower
         );
 
-    finalColor *= light;
+    // finalColor *= light;
+
+    float dist = length(cameraPosition - vPosition);
+    float fogFactor = smoothstep(5.0, 20.0, dist);
+    finalColor = mix(finalColor, uFogColor, fogFactor);
 
     gl_FragColor = vec4(finalColor, 1.0);
 }
