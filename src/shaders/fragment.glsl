@@ -51,7 +51,7 @@ void main()
 
     light += ambientLight(vec3(1.0,1.0,1.0), 0.5);
     light += directionalLight(
-        vec3(1.0,1.0,1.0), //light color
+        uFogColor, //light color
         1.0,    //intensity
         normal, //normal
         vec3(2.0,2.0,2.0), //lightposition
@@ -59,7 +59,7 @@ void main()
         100.0 //specularpower
         );
 
-    // finalColor *= light;
+    finalColor *= light;
 
     float dist = length(cameraPosition - vPosition);
     float fogFactor = smoothstep(5.0, 20.0, dist);

@@ -88,8 +88,8 @@ vec3 deform(vec3 pos) {
 
     float hash = rand(vec2(instanceMatrix[3].x, instanceMatrix[3].z));
 
-    float bendStrength = mix(0.3, 0.6, hash);
-    float bendStart = 0.2;
+    float bendStrength = mix(0.3,0.6,hash);
+    float bendStart = mix(0.0,0.3,hash);
     float t = clamp((pos.y / 2.0 - bendStart) / (1.0 - bendStart), 0.0, 1.0);
     float topBendFactor = bezier(t, 0.1);
 
@@ -100,9 +100,7 @@ vec3 deform(vec3 pos) {
 
     // Strong wind
     vec3 worldPos = (instanceMatrix * vec4(pos, 1.0)).xyz;
-    // float wave = sin(dot(worldPos.xz, vec2(0.7, 0.7)) * 0.5 + uTime * uSpeed * 0.5);
-    float wave = cnoise(worldPos.xz * 0.2 + vec2(uTime * uSpeed * 0.2, 0.0));
-
+    float wave = cnoise(worldPos.xz * 0.3 + vec2(uTime * uSpeed * 0.2, 0.0));
     float strongWind = wave * 0.65;
     vec3 strongDir = normalize(vec3(0.0, 0.0, 1.0));
     float y = pos.y;
