@@ -79,6 +79,12 @@ Level of Detail (LOD) system where grass blades use `3 segments` instead of 7 wh
 - In a loop each frame, determine for each instance whether it's within distance `LODDistance` of the camera.
 - Based on this, show that instance in either high or low LOD mesh.
 
+
+
+
+https://github.com/user-attachments/assets/36f82a15-9e05-446b-860f-787a2ed0b6c5
+
+
 ```jsx
 const highDetailRef = useRef();
 const lowDetailRef = useRef();
