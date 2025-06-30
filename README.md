@@ -33,11 +33,8 @@ The geometry is manually generated using triangles (2 per rectangular segment), 
 <img width="1280" alt="Screenshot 2025-06-17 at 10 29 57 PM" src="https://github.com/user-attachments/assets/e8f2ef93-d4a2-4461-9ede-4179e54c35ca" />
 
 ```jsx
-// Grass blade geometry
-  const grassGeometry = useMemo(() => {
-    const segments = 7;
-
-
+// Grass geometry generator
+  const createGrassGeometry = (segments) => {
     const taper = 0.005;
     const positions = [];
 
@@ -46,17 +43,17 @@ The geometry is manually generated using triangles (2 per rectangular segment), 
       const y1 = ((i + 1) / segments) * height;
 
       positions.push(
-        -halfWidth + taper * i, y0, 0,  // bottom left
-        halfWidth - taper * i, y0, 0, // bottom right
-        -halfWidth + taper * (i + 1), y1, 0, // top left
+        -halfWidth + taper * i, y0, 0,
+        halfWidth - taper * i, y0, 0,
+        -halfWidth + taper * (i + 1), y1, 0,
 
-        -halfWidth + taper * (i + 1), y1, 0, // top left
-        halfWidth - taper * i, y0, 0, // bottom right
-        halfWidth - taper * (i + 1), y1, 0 // top right
+        -halfWidth + taper * (i + 1), y1, 0,
+        halfWidth - taper * i, y0, 0,
+        halfWidth - taper * (i + 1), y1, 0
       );
     }
 
-    // top traingle
+    // tip triangle
     positions.push(
       -halfWidth + taper * (segments - 1), ((segments - 1) / segments) * height, 0,
       halfWidth - taper * (segments - 1), ((segments - 1) / segments) * height, 0,
@@ -65,12 +62,41 @@ The geometry is manually generated using triangles (2 per rectangular segment), 
 
     const geo = new THREE.BufferGeometry();
     geo.setAttribute("position", new THREE.BufferAttribute(new Float32Array(positions), 3));
-    // create normals
     geo.computeVertexNormals();
     return geo;
-  }, []);
+  };
 ```
 
+---
+
+## 📏 Level of Detail (LOD) system
+
+Level of Detail (LOD) system where grass blades use `3 segments` instead of 7 when far from the camera,.
+
+
+- Create two geometries: one high-detail (7 segments), and one low-detail (3 segments).
+- Use two instanced meshes: one with high detail, one with low detail.
+- In a loop each frame, determine for each instance whether it's within distance `LODDistance` of the camera.
+- Based on this, show that instance in either high or low LOD mesh.
+
+```jsx
+const highDetailRef = useRef();
+const lowDetailRef = useRef();
+//...//
+const highDetailGeo = useMemo(() => createGrassGeometry(7), []);
+const lowDetailGeo = useMemo(() => createGrassGeometry(1), []);
+//...//
+<>
+  <instancedMesh
+    ref={highDetailRef}
+    args={[highDetailGeo, material, count]}
+  />
+  <instancedMesh
+    ref={lowDetailRef}
+    args={[lowDetailGeo, material, count]}
+  />
+</>
+```
 ---
 
 ## 🌾 Instancing
