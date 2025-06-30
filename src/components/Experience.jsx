@@ -50,13 +50,13 @@ export const Experience = () => {
 
         <CharacterController />
 
-        <fogExp2 attach="fog" color="#cad4db" density={0.1} />
+        {/* <fogExp2 attach="fog" color="#cad4db" density={0.1} /> */}
 
       </Physics>
-      <mesh>
+      {/* <mesh>
         <boxGeometry args={[100, 100, 100]} />
         <meshStandardMaterial color="#78623b" side={2}/>
-      </mesh>
+      </mesh> */}
       <InstancedGrass/>
 
     </>
